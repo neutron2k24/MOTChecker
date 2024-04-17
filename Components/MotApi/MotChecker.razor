@@ -5,11 +5,10 @@
 @inject IMOTApiService _motApiService
 @rendermode InteractiveServer
 
-
 <div class="number-plate mb-3">
     <div class="input-group">
-        <input type="text" class="form-control" placeholder="Enter Reg" aria-label="Number Plate" aria-describedby="btnCheck" @bind="RegistrationNumber" maxlength="7">
-        <button class="btn btn-outline-secondary" type="button" id="btnCheck" @onclick="FetchDetails">Check</button>
+        <input id="registration-number" type="text" class="form-control" placeholder="Enter Reg" aria-label="Number Plate" aria-describedby="btnCheck" @onkeydown="CheckKey" @bind="RegistrationNumber" maxlength="7">
+        <button id="search-button" class="btn btn-outline-secondary" type="button" @onclick="FetchDetails">Check</button>
     </div>
 </div>
 
@@ -29,6 +28,7 @@
 }
 
 @code {
+    private static string _defaultError = "An unknown error occured.";
     private string _registrationNumber = "";
     public bool Loading { get; set; }
 
@@ -39,7 +39,9 @@
         get { return _registrationNumber; }
 
         //Normalize user vehicle registration
-        set { _registrationNumber = value.Replace(" ", "").ToUpper(); }
+        set {
+            _registrationNumber = RemoveInvalidCharacters(value).ToUpper();
+        }
     }
 
     /// <summary>
@@ -69,11 +71,11 @@
                         LastCheckedVehicleDetails = result.VehicleDetails;
                     }
                     else {
-                        ErrorMessage = result.ErrorMessage != null ? result.ErrorMessage : "An unknown error occured 1.";
+                        ErrorMessage = result.ErrorMessage != null ? result.ErrorMessage : _defaultError;
                     }
                 }
                 else {
-                    ErrorMessage = "An unknown error occured 2.";
+                    ErrorMessage = _defaultError;
                 }
             }
             else {
@@ -84,5 +86,16 @@
             ErrorMessage = "Please enter a registration.";
         }
         Loading = false;
+    }
+
+    private async Task CheckKey(KeyboardEventArgs e) {
+        if(e.Code == "Enter" || e.Code == "NumpadEnter") {
+            await  FetchDetails();
+        }
+    }
+
+    private string RemoveInvalidCharacters(string reg) {
+        Regex rg = new Regex("[^a-zA-Z0-9]");
+        return rg.Replace(reg,"");
     }
 }
