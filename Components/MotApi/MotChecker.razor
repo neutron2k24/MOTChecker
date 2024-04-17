@@ -1,0 +1,88 @@
+﻿@using System.Text.RegularExpressions
+@using MOTChecker.Services.MOTApiService
+@using MOTChecker.Services.MOTApiService.Interfaces
+@using MOTChecker.Services.MOTApiService.Models
+@inject IMOTApiService _motApiService
+@rendermode InteractiveServer
+
+
+<div class="number-plate mb-3">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Enter Reg" aria-label="Number Plate" aria-describedby="btnCheck" @bind="RegistrationNumber" maxlength="7">
+        <button class="btn btn-outline-secondary" type="button" id="btnCheck" @onclick="FetchDetails">Check</button>
+    </div>
+</div>
+
+@if(Loading) {
+    <p class="alert text-center">
+        <i class="fa-solid fa-spinner fa-spin-pulse fa-2x"></i>
+    </p>
+}
+
+
+@if(!string.IsNullOrWhiteSpace(ErrorMessage)) {
+    <p class="alert alert-danger"> @ErrorMessage</p> 
+}
+
+@if (string.IsNullOrWhiteSpace(ErrorMessage) && LastCheckedVehicleDetails != null) {
+    <VehicleDetails Vehicle="LastCheckedVehicleDetails" />
+}
+
+@code {
+    private string _registrationNumber = "";
+    public bool Loading { get; set; }
+
+    /// <summary>
+    /// User bound registrtation number.
+    /// </summary>
+    public string RegistrationNumber { 
+        get { return _registrationNumber; }
+
+        //Normalize user vehicle registration
+        set { _registrationNumber = value.Replace(" ", "").ToUpper(); }
+    }
+
+    /// <summary>
+    /// Error message
+    /// </summary>
+    public string ErrorMessage { get; set; } = "";
+
+    /// <summary>
+    /// Hold vehicle details for binding.
+    /// </summary>
+    public VehicleDetail? LastCheckedVehicleDetails { get; set; } = null;
+
+
+    /// <summary>
+    /// Make API Call
+    /// </summary>
+    /// <returns></returns>
+    private async Task FetchDetails() {
+        ErrorMessage = ""; //Reset any error message.
+        Loading = true;
+        if(!string.IsNullOrEmpty(RegistrationNumber)) {
+            if (MOTApiService.RegistrationIsValid(RegistrationNumber)) {
+                MOTHistoryResult? result = await _motApiService.RequestVehicleDetailsAsync(RegistrationNumber);
+
+                if (result != null) {
+                    if (result.VehicleDetails != null) {
+                        LastCheckedVehicleDetails = result.VehicleDetails;
+                    }
+                    else {
+                        ErrorMessage = result.ErrorMessage != null ? result.ErrorMessage : "An unknown error occured 1.";
+                    }
+                }
+                else {
+                    ErrorMessage = "An unknown error occured 2.";
+                }
+            }
+            else {
+                ErrorMessage = "Please enter a valid UK Registration.";
+            }
+        }
+        else {
+            ErrorMessage = "Please enter a registration.";
+        }
+        Loading = false;
+    }
+}

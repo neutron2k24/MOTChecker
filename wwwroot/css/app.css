@@ -1,0 +1,79 @@
+:root { 
+        --black: #0b0c0c; 
+        --govuk-border: b1b4b6;
+        --white: #fff;
+        --govuk-text: #0b0c0c;
+        --govuk-green: #00703c;
+        --govuk-border: #b1b4b6;
+        --govuk-link: 1d70b8;
+        --govuk-link-hover: #003078;
+        --govuk-yellow: #ffdd00;
+        --govuk-error: #d4351c;
+}
+
+/*******************************************
+    IMPORTS
+*******************************************/
+@font-face { font-family: uknumberplate; font-style: normal; font-weight: 400; src: local('UKNumberPlate'),url(https://fonts.cdnfonts.com/s/4916/UKNumberPlate.woff) format('woff') }
+
+/*******************************************
+    CONVENIENCE
+*******************************************/
+body { font-family: "Roboto", sans-serif; font-weight: 400; font-style: normal; font-size: 16px; 
+       min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--govuk-text); 
+ background: rgb(86,148,202);
+background: linear-gradient(140deg, rgba(86,148,202,1) 0%, rgba(76,44,146,1) 100%); 
+}
+
+
+h1, .h1 { font-weight: 900; text-transform: uppercase;  }
+
+/*******************************************
+    CLASSES
+*******************************************/ 
+.text-error { color: var(--govuk-error) !important;}
+
+.number-plate { position: relative; }
+.number-plate input[type="text"] { position: relative; font-family: 'UKNumberPlate', sans-serif; text-transform: uppercase; font-size: 2rem; color: var(--black); background-color: var(--govuk-yellow); padding: 0.5rem 1rem; }
+    .number-plate .btn { background-color: var(--govuk-link); color: var(--white); transition: all 0.5s ease-in-out; }
+        .number-plate .btn { background-color: var(--govuk-link-hover); }
+
+.page { position: relative; max-width: 600px; background: var(--white); transition: all 0.5s ease-in-out; min-height: 100vh; border: solid 1px var(--govuk-border); box-shadow: 0px 0px 10px rgba(0,0,0,0.3); 
+        -webkit-animation: page-entrance 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; animation: page-entrance 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;  }
+
+.vehicle-detail-box { border: solid 1px var(--govuk-border); display: flex; flex-direction: row; align-items: center; width: 100%; padding: 2rem; text-align: left; margin: 0.5rem 0; }
+    .vehicle-detail-box > i { margin-right: 1rem; color: var(--govuk-green); transition: all 0.5s ease-in-out; }
+        .vehicle-detail-box:hover > i { transform: scale(1.1);}
+
+/*******************************************
+    ELEMENTS
+*******************************************/
+    #blazor-error-ui { display: none; }
+    #dvla-logo { max-width: 100px; }
+
+/*******************************************
+    BS5 OVERRIDES
+*******************************************/
+
+/*******************************************
+    MEDIA QUERIES
+*******************************************/
+@media(min-width: 576px) {
+    .page { min-height: 400px; }
+    .vehicle-detail-box { width: 50%; margin: 0px; }
+    .vehicle-detail-box:first-child, .vehicle-detail-box:nth-child(2) { border-bottom: 0px; }
+    .vehicle-detail-box:nth-child(odd) { border-right: 0px; }
+}
+
+/*******************************************
+    KEYFRAMES
+*******************************************/
+@-webkit-keyframes page-entrance {
+    0% { -webkit-transform: scale(0); transform: scale(0); opacity: 1; }
+    100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
+}
+
+@keyframes page-entrance {
+    0% { -webkit-transform: scale(0); transform: scale(0); opacity: 1; }
+    100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
+}
