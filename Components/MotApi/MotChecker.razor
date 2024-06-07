@@ -62,24 +62,22 @@
     private async Task FetchDetails() {
         ErrorMessage = ""; //Reset any error message.
         Loading = true;
-        if(!string.IsNullOrEmpty(RegistrationNumber)) {
-            if (MOTApiService.RegistrationIsValid(RegistrationNumber)) {
-                MOTHistoryResult? result = await _motApiService.RequestVehicleDetailsAsync(RegistrationNumber);
+        if (!string.IsNullOrEmpty(RegistrationNumber)) {
 
-                if (result != null) {
-                    if (result.VehicleDetails != null) {
-                        LastCheckedVehicleDetails = result.VehicleDetails;
-                    }
-                    else {
-                        ErrorMessage = result.ErrorMessage != null ? result.ErrorMessage : _defaultError;
-                    }
+            MOTHistoryResult? result = await _motApiService.RequestVehicleDetailsAsync(RegistrationNumber);
+
+            if (result != null) {
+                if (result.VehicleDetails != null)
+                {
+                    LastCheckedVehicleDetails = result.VehicleDetails;
                 }
-                else {
-                    ErrorMessage = _defaultError;
+                else
+                {
+                    ErrorMessage = result.ErrorMessage != null ? result.ErrorMessage : _defaultError;
                 }
             }
             else {
-                ErrorMessage = "Please enter a valid UK Registration.";
+                ErrorMessage = _defaultError;
             }
         }
         else {

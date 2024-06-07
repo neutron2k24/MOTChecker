@@ -16,10 +16,7 @@ namespace MOTChecker.Services.MOTApiService
         private readonly ILogger<MOTApiService> _logger;
         private readonly string _endPointUrl = "https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests?registration=";
 
-        public static string _vehicleRegistrationRexExPattern = @"(?<Current>^[A-Z]{2}[0-9]{2}[A-Z]{3}$)|(?<Prefix>^[A-Z][0-9]{1,3}[A-Z]{3}$)|(?<Suffix>^[A-Z]{3}[0-9]{1,3}[A-Z]$)|(?<DatelessLongNumberPrefix>^[0-9]{1,4}[A-Z]{1,2}$)|(?<DatelessShortNumberPrefix>^[0-9]{1,3}[A-Z]{1,3}$)|(?<DatelessLongNumberSuffix>^[A-Z]{1,2}[0-9]{1,4}$)|(?<DatelessShortNumberSufix>^[A-Z]{1,3}[0-9]{1,3}$)|(?<DatelessNorthernIreland>^[A-Z]{1,3}[0-9]{1,4}$)|(?<DiplomaticPlate>^[0-9]{3}[DX]{1}[0-9]{3}$)";
-
-        public MOTApiService(HttpClient httpClient, ILogger<MOTApiService> logger)
-        {
+        public MOTApiService(HttpClient httpClient, ILogger<MOTApiService> logger) {
             _httpClient = httpClient;
             _logger = logger;
         }
@@ -29,8 +26,7 @@ namespace MOTChecker.Services.MOTApiService
         /// </summary>
         /// <param name="registration"></param>
         /// <returns></returns>
-        public async Task<MOTHistoryResult?> RequestVehicleDetailsAsync(string registration)
-        {
+        public async Task<MOTHistoryResult?> RequestVehicleDetailsAsync(string registration) {
             MOTHistoryResult result = new MOTHistoryResult();
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _endPointUrl + registration)) {
                 request.Headers.Add("x-api-key", MOTApiServiceSettings.ApiKey);
@@ -64,16 +60,6 @@ namespace MOTChecker.Services.MOTApiService
                 }*/
             }
             return result;
-        }
-
-        /// <summary>
-        /// Check if a specified vehicle registration is valid.
-        /// </summary>
-        /// <param name="registration"></param>
-        /// <returns></returns>
-        public static bool RegistrationIsValid(string registration) {
-            Regex rg = new Regex(_vehicleRegistrationRexExPattern);
-            return rg.Match(registration.ToUpper().Replace(" ", "")).Success;
         }
 
     }

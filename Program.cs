@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<HttpClient>();
-builder.Services.AddTransient<IMOTApiService, MOTApiService>();
+builder.Services.AddScoped<IMOTApiService, MOTApiService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
