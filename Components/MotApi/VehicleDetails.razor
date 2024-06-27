@@ -2,26 +2,17 @@
 @using MOTChecker.Services.MOTApiService.Models
 
     
-@if (Vehicle != null && LastMOT != null) {
-    <p class="alert @(LastMOT.HasExpired ? "alert-danger" : "alert-success")">Your MOT @(LastMOT.HasExpired ? "expired" : " expires") on @LastMOT.ExpiryDate.ToString("dd/MM/yyyy") </p>
+@if (Vehicle != null && Vehicle.MostRecentMOTTest != null) {
+    <p class="alert @(Vehicle.MostRecentMOTTest.HasExpired ? "alert-danger" : "alert-success")">Your MOT @(Vehicle.MostRecentMOTTest.HasExpired ? "expired" : " expires") on @Vehicle.MostRecentMOTTest.ExpiryDate.ToString("dd/MM/yyyy") </p>
     <div class=" d-flex flex-row flex-wrap">
         <div class="vehicle-detail-box" aria-label="Vehicle Make and Model"><i class="fa-solid fa-car fa-fw fa-2x" style="color: @Vehicle.PrimaryColour.ToLower() !important"></i> @Vehicle.Make @Vehicle.Model</div>
         <div class="vehicle-detail-box" aria-label="Vehicle Colour"><i class="fa-solid fa-palette fa-fw fa-2x" style="color: @Vehicle.PrimaryColour.ToLower() !important"></i> @Vehicle.PrimaryColour</div>
-        <div class="vehicle-detail-box" aria-label="MOT Epires"><i class="fa-solid fa-calendar fa-fw fa-2x @(LastMOT.HasExpired ? "text-error" : "")"></i> Expiry Date @LastMOT.ExpiryDate.ToString("dd/MM/yyyy")</div>
-        <div class="vehicle-detail-box" arial-label="Mileage"><i class="fa-solid fa-gauge fa-fw fa-2x"></i> @LastMOT.OdometerValue @(LastMOT.OdometerUnit == "mi" ? "miles" : "kilometers")</div>
+        <div class="vehicle-detail-box" aria-label="MOT Epires"><i class="fa-solid fa-calendar fa-fw fa-2x @(Vehicle.MostRecentMOTTest.HasExpired ? "text-error" : "")"></i> Expiry Date @Vehicle.MostRecentMOTTest.ExpiryDate.ToString("dd/MM/yyyy")</div>
+        <div class="vehicle-detail-box" arial-label="Mileage"><i class="fa-solid fa-gauge fa-fw fa-2x"></i> @Vehicle.MostRecentMOTTest.OdometerValue @(Vehicle.MostRecentMOTTest.OdometerUnit == "mi" ? "miles" : "kilometers")</div>
     </div>
 }
 
 @code {
     [Parameter]
     public VehicleDetail? Vehicle { get; set; }
-
-    /// <summary>
-    /// Accessor shortcut for Last MOT from vehicle details.
-    /// </summary>
-    public MotTest? LastMOT {
-        get {
-            return Vehicle != null ? Vehicle.MotTests[0] : null;
-        }
-    }
 }

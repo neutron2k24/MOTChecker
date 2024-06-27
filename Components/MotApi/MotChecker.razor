@@ -7,7 +7,7 @@
 
 <div class="number-plate mb-3">
     <div class="input-group">
-        <input id="registration-number" type="text" class="form-control" placeholder="Enter Reg" aria-label="Number Plate" aria-describedby="btnCheck" @onkeydown="CheckKey" @bind="RegistrationNumber" maxlength="7">
+        <input id="registration-number" type="text" class="form-control" placeholder="Enter Reg" aria-label="Number Plate" aria-describedby="btnCheck" @bind="RegistrationNumber" maxlength="7">
         <button id="search-button" class="btn btn-outline-secondary" type="button" @onclick="FetchDetails">Check</button>
     </div>
 </div>
@@ -67,12 +67,10 @@
             MOTHistoryResult? result = await _motApiService.RequestVehicleDetailsAsync(RegistrationNumber);
 
             if (result != null) {
-                if (result.VehicleDetails != null)
-                {
+                if (result.VehicleDetails != null) {
                     LastCheckedVehicleDetails = result.VehicleDetails;
                 }
-                else
-                {
+                else {
                     ErrorMessage = result.ErrorMessage != null ? result.ErrorMessage : _defaultError;
                 }
             }
@@ -84,12 +82,6 @@
             ErrorMessage = "Please enter a registration.";
         }
         Loading = false;
-    }
-
-    private async Task CheckKey(KeyboardEventArgs e) {
-        if(e.Code == "Enter" || e.Code == "NumpadEnter") {
-            await  FetchDetails();
-        }
     }
 
     private string RemoveInvalidCharacters(string reg) {

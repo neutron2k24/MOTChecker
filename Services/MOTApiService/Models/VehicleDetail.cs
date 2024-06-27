@@ -12,5 +12,12 @@
         public string FuelType { get; set; }
         public string PrimaryColour { get; set; }
         public MotTest[] MotTests { get; set; }
+
+        public MotTest? MostRecentMOTTest {
+            get {
+                if(MotTests!= null && MotTests.Length>0) return MotTests[0];
+                return null;
+            }
+        }
     }
 }
